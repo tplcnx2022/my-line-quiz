@@ -13,6 +13,9 @@
     .profile-card img { width: 45px; height: 45px; border-radius: 50%; margin-right: 12px; }
     .profile-info p { margin: 0; font-size: 13px; color: #666; }
     .profile-info h4 { margin: 0; font-size: 16px; color: #111; }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px; color: #333; }
+    .form-group input[type="text"], .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 15px; }
     .question-block { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
     .question-block h3 { font-size: 16px; margin-bottom: 12px; color: #222; }
     .option { display: block; margin: 8px 0; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; background: #fafafa; }
@@ -42,29 +45,74 @@
         <h4 id="user-name">Loading...</h4>
       </div>
     </div>
-<!-- 🟢 เพิ่มช่องเลือกประเภทแบบทดสอบ -->
-<div class="form-group">
-  <label for="test-type">ประเภทแบบทดสอบ <span style="color: red;">*</span></label>
-  <select id="test-type" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px;">
-    <option value="Pre-test">แบบทดสอบก่อนเรียน (Pre-test)</option>
-    <option value="Post-test">แบบทดสอบหลังเรียน (Post-test)</option>
-  </select>
-</div>
+
     <form id="quiz-form">
+      <!-- 🟢 ช่องกรอกชื่อ-นามสกุลจริง -->
+      <div class="form-group">
+        <label for="fullname">ชื่อ - นามสกุลจริง <span style="color: red;">*</span></label>
+        <input type="text" id="fullname" placeholder="ตัวอย่าง: สมชาย ใจดี" required>
+      </div>
+
+      <!-- 🟢 ช่องกรอกแผนก / ฝ่าย -->
+      <div class="form-group">
+        <label for="department">แผนก / ฝ่าย <span style="color: red;">*</span></label>
+        <input type="text" id="department" placeholder="ตัวอย่าง: การตลาด / IT / HR" required>
+      </div>
+
+      <!-- 🟢 ช่องเลือกประเภทแบบทดสอบ -->
+      <div class="form-group">
+        <label for="test-type">ประเภทแบบทดสอบ <span style="color: red;">*</span></label>
+        <select id="test-type">
+          <option value="Pre-test">แบบทดสอบก่อนเรียน (Pre-test)</option>
+          <option value="Post-test">แบบทดสอบหลังเรียน (Post-test)</option>
+        </select>
+      </div>
+
+      <hr style="border: 0; border-top: 1px solid #ccc; margin: 20px 0;">
+
       <!-- 🟢 ข้อที่ 1 -->
       <div class="question-block">
         <h3>ข้อที่ 1: สีประจำองค์กรของ LINE คือสีอะไร?</h3>
         <label class="option"><input type="radio" name="q1" value="A"> สีฟ้า</label>
         <label class="option"><input type="radio" name="q1" value="B"> สีเขียว</label>
         <label class="option"><input type="radio" name="q1" value="C"> สีแดง</label>
+        <label class="option"><input type="radio" name="q1" value="D"> สีเหลือง</label>
       </div>
 
       <!-- 🟢 ข้อที่ 2 -->
       <div class="question-block">
-        <h3>ข้อที่ 2: LIFF ย่อมาจากอะไร?</h3>
+        <h3>ข้อที่ 2: LIFF ย่อมาจากคำว่าอะไร?</h3>
         <label class="option"><input type="radio" name="q2" value="A"> LINE Front-end Framework</label>
         <label class="option"><input type="radio" name="q2" value="B"> LINE Information Fast File</label>
         <label class="option"><input type="radio" name="q2" value="C"> LINE Instant Fast Form</label>
+        <label class="option"><input type="radio" name="q2" value="D"> LINE Interactive Function Feature</label>
+      </div>
+
+      <!-- 🟢 ข้อที่ 3 -->
+      <div class="question-block">
+        <h3>ข้อที่ 3: ระบบหลังบ้าน Google Apps Script ทำหน้าที่อะไรในโปรเจกต์นี้?</h3>
+        <label class="option"><input type="radio" name="q3" value="A"> ออกแบบหน้าตาเว็บไซต์</label>
+        <label class="option"><input type="radio" name="q3" value="B"> บันทึกข้อมูลเข้า Google Sheets</label>
+        <label class="option"><input type="radio" name="q3" value="C"> สร้างรูปภาพกราฟิก</label>
+        <label class="option"><input type="radio" name="q3" value="D"> เชื่อมต่อสัญญาณอินเทอร์เน็ต</label>
+      </div>
+
+      <!-- 🟢 ข้อที่ 4 -->
+      <div class="question-block">
+        <h3>ข้อที่ 4: เครื่องมือใดใช้สำหรับนำข้อมูลไปสร้าง Dashboard แสดงผลคะแนน?</h3>
+        <label class="option"><input type="radio" name="q4" value="A"> Google Docs</label>
+        <label class="option"><input type="radio" name="q4" value="B"> Google Slides</label>
+        <label class="option"><input type="radio" name="q4" value="C"> Looker Studio</label>
+        <label class="option"><input type="radio" name="q4" value="D"> Google Calendar</label>
+      </div>
+
+      <!-- 🟢 ข้อที่ 5 -->
+      <div class="question-block">
+        <h3>ข้อที่ 5: ประโยชน์หลักของการเปรียบเทียบ Pre-test และ Post-test คืออะไร?</h3>
+        <label class="option"><input type="radio" name="q5" value="A"> เพื่อหาคนเก่งที่สุดคนเดียว</label>
+        <label class="option"><input type="radio" name="q5" value="B"> เพื่อวัดอัตราพัฒนาการเรียนรู้รายบุคคล</label>
+        <label class="option"><input type="radio" name="q5" value="C"> เพื่อลดเวลาในการจัดอบรม</label>
+        <label class="option"><input type="radio" name="q5" value="D"> เพื่อเช็กชื่อการเข้าเรียนเท่านั้น</label>
       </div>
 
       <button type="button" class="btn-submit" id="submit-btn" onclick="submitQuiz()">ส่งคำตอบ</button>
@@ -75,28 +123,30 @@
   <div id="result-screen">
     <h2>🎉 ส่งคำตอบเรียบร้อย!</h2>
     <p>คะแนนของคุณคือ</p>
-    <h1 id="score-text" style="color: #06C755; font-size: 48px; margin: 10px 0;">0 / 2</h1>
+    <h1 id="score-text" style="color: #06C755; font-size: 48px; margin: 10px 0;">0 / 5</h1>
     <p>ระบบได้บันทึกคะแนนเข้าฐานข้อมูลเรียบร้อยแล้ว</p>
     <button class="btn-submit" onclick="liff.closeWindow()" style="background: #333; margin-top: 15px;">ปิดหน้าต่าง</button>
   </div>
 </div>
 
 <script>
-  // 🔴 1. ใส่ LIFF ID ของคุณจาก LINE Developers
-  const MY_LIFF_ID = "2011669854-XyKoko2d"; 
+  // 🔴 1. ใส่ LIFF ID ของคุณ
+  const MY_LIFF_ID = "2011669854-XyKoko2d";[cite: 1]
   
-  // 🔴 2. ใส่ Web App URL ที่ได้จาก Google Apps Script (GAS)
-  const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyJl--z5eaaSIDFBqqQ2KVlg_MA8_iuEPeigttPDo2-Ano_Afl9fI39bVelMRd7FNw/exec"; 
+  // 🔴 2. ใส่ Web App URL จาก Google Apps Script (GAS)
+  const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyJl--z5eaaSIDFBqqQ2KVlg_MA8_iuEPeigttPDo2-Ano_Afl9fI39bVelMRd7FNw/exec";[cite: 1]
 
-  // 🔴 3. ตั้งค่าเฉลยข้อสอบ (ก=A, ข=B, ค=C)
+  // 🔴 3. ตั้งค่าเฉลยข้อสอบ 5 ข้อ (A, B, C, D)
   const answers = { 
     q1: "B", 
-    q2: "A" 
+    q2: "A",
+    q3: "B",
+    q4: "C",
+    q5: "B"
   };
 
   let userData = { userId: "", displayName: "" };
 
-  // เมื่อเปิดหน้าเว็บ ระบบจะดึงโปรไฟล์ LINE อัตโนมัติ
   window.onload = function() {
     liff.init({ liffId: MY_LIFF_ID })
       .then(() => {
@@ -121,37 +171,55 @@
       });
   };
 
-  // ฟังก์ชันคำนวณคะแนนและส่งข้อมูล
   function submitQuiz() {
+    const fullName = document.getElementById("fullname").value.trim();
+    const department = document.getElementById("department").value.trim();
+    const testType = document.getElementById("test-type").value;
+    
     const form = document.getElementById("quiz-form");
     const q1 = form.q1.value;
     const q2 = form.q2.value;
+    const q3 = form.q3.value;
+    const q4 = form.q4.value;
+    const q5 = form.q5.value;
 
-    if (!q1 || !q2) {
-      alert("กรุณาตอบคำถามให้ครบทุกข้อครับ");
+    if (!fullName) {
+      alert("กรุณากรอกชื่อ - นามสกุลจริงก่อนส่งคำตอบครับ");
       return;
     }
 
-    // คำนวณคะแนน
+    if (!department) {
+      alert("กรุณากรอกแผนก / ฝ่าย ก่อนส่งคำตอบครับ");
+      return;
+    }
+
+    if (!q1 || !q2 || !q3 || !q4 || !q5) {
+      alert("กรุณาตอบคำถามให้ครบทั้ง 5 ข้อครับ");
+      return;
+    }
+
+    // คำนวณคะแนน (เต็ม 5)
     let score = 0;
     if (q1 === answers.q1) score++;
     if (q2 === answers.q2) score++;
+    if (q3 === answers.q3) score++;
+    if (q4 === answers.q4) score++;
+    if (q5 === answers.q5) score++;
 
     const btn = document.getElementById("submit-btn");
     btn.disabled = true;
     btn.innerText = "กำลังส่งคะแนน...";
-	
-	const testType = document.getElementById("test-type").value;
+    
     const payload = {
-  userId: userData.userId,
-  displayName: userData.displayName,
-  fullName: fullName,
-  testType: testType, // 🟢 ส่งประเภทแบบทดสอบไปที่ GAS
-  score: score,
-  total: 2
+      userId: userData.userId,
+      displayName: userData.displayName,
+      fullName: fullName,
+      department: department, // 🟢 ส่งข้อมูลแผนก
+      testType: testType,
+      score: score,
+      total: 5                // 🟢 คะแนนเต็ม 5
     };
-	
-    // ส่งคะแนนไปเก็บที่ Google Sheets ผ่าน Google Apps Script
+    
     fetch(GAS_WEB_APP_URL, {
       method: "POST",
       body: JSON.stringify(payload)
@@ -160,7 +228,7 @@
     .then(data => {
       document.getElementById("quiz-screen").style.display = "none";
       document.getElementById("result-screen").style.display = "block";
-      document.getElementById("score-text").innerText = `${score} / 2`;
+      document.getElementById("score-text").innerText = `${score} / 5`;
     })
     .catch(err => {
       console.error(err);

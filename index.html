@@ -42,7 +42,14 @@
         <h4 id="user-name">Loading...</h4>
       </div>
     </div>
-
+<!-- 🟢 เพิ่มช่องเลือกประเภทแบบทดสอบ -->
+<div class="form-group">
+  <label for="test-type">ประเภทแบบทดสอบ <span style="color: red;">*</span></label>
+  <select id="test-type" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px;">
+    <option value="Pre-test">แบบทดสอบก่อนเรียน (Pre-test)</option>
+    <option value="Post-test">แบบทดสอบหลังเรียน (Post-test)</option>
+  </select>
+</div>
     <form id="quiz-form">
       <!-- 🟢 ข้อที่ 1 -->
       <div class="question-block">
@@ -133,14 +140,17 @@
     const btn = document.getElementById("submit-btn");
     btn.disabled = true;
     btn.innerText = "กำลังส่งคะแนน...";
-
+	
+	const testType = document.getElementById("test-type").value;
     const payload = {
-      userId: userData.userId,
-      displayName: userData.displayName,
-      score: score,
-      total: 2
+  userId: userData.userId,
+  displayName: userData.displayName,
+  fullName: fullName,
+  testType: testType, // 🟢 ส่งประเภทแบบทดสอบไปที่ GAS
+  score: score,
+  total: 2
     };
-
+	
     // ส่งคะแนนไปเก็บที่ Google Sheets ผ่าน Google Apps Script
     fetch(GAS_WEB_APP_URL, {
       method: "POST",

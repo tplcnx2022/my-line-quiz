@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>แบบทดสอบออนไลน์</title>
+  <!-- นำเข้า LIFF SDK จาก LINE -->
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <style>
+    body { font-family: 'Tahoma', 'Segoe UI', sans-serif; background-color: #f4f6f8; margin: 0; padding: 20px; color: #333; }
+    .container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .profile-card { display: flex; align-items: center; background: #eef2ff; padding: 12px; border-radius: 8px; margin-bottom: 20px; }
+    .profile-card img { width: 45px; height: 45px; border-radius: 50%; margin-right: 12px; }
+    .profile-info p { margin: 0; font-size: 13px; color: #666; }
+    .profile-info h4 { margin: 0; font-size: 16px; color: #111; }
+    .question-block { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+    .question-block h3 { font-size: 16px; margin-bottom: 12px; color: #222; }
+    .option { display: block; margin: 8px 0; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; background: #fafafa; }
+    .option:hover { background: #f0f0f0; }
+    .option input { margin-right: 10px; }
+    .btn-submit { width: 100%; background: #06C755; color: white; border: none; padding: 14px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
+    .btn-submit:disabled { background: #ccc; }
+    #loading { text-align: center; padding: 40px; }
+    #result-screen { display: none; text-align: center; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- หน้าโหลดรอเชื่อมต่อ LINE -->
+  <div id="loading">
+    <p>กำลังเชื่อมต่อระบบ LINE...</p>
+  </div>
+
+  <!-- หน้าข้อสอบ -->
+  <div id="quiz-screen" style="display: none;">
+    <!-- แสดงโปรไฟล์ LINE อัตโนมัติ -->
+    <div class="profile-card">
+      <img id="user-img" src="" alt="Profile">
+      <div class="profile-info">
+        <p>ผู้ทำข้อสอบ:</p>
+        <h4 id="user-name">Loading...</h4>
+      </div>
+    </div>
+
+    <form id="quiz-form">
+      <!-- 🟢 ข้อที่ 1 -->
+      <div class="question-block">
+        <h3>ข้อที่ 1: สีประจำองค์กรของ LINE คือสีอะไร?</h3>
+        <label class="option"><input type="radio" name="q1" value="A"> สีฟ้า</label>
+        <label class="option"><input type="radio" name="q1" value="B"> สีเขียว</label>
+        <label class="option"><input type="radio" name="q1" value="C"> สีแดง</label>
+      </div>
+
+      <!-- 🟢 ข้อที่ 2 -->
+      <div class="question-block">
+        <h3>ข้อที่ 2: LIFF ย่อมาจากอะไร?</h3>
+        <label class="option"><input type="radio" name="q2" value="A"> LINE Front-end Framework</label>
+        <label class="option"><input type="radio" name="q2" value="B"> LINE Information Fast File</label>
+        <label class="option"><input type="radio" name="q2" value="C"> LINE Instant Fast Form</label>
+      </div>
+
+      <button type="button" class="btn-submit" id="submit-btn" onclick="submitQuiz()">ส่งคำตอบ</button>
+    </form>
+  </div>
+
+  <!-- หน้าแสดงผลคะแนนหลังทำเสร็จ -->
+  <div id="result-screen">
+    <h2>🎉 ส่งคำตอบเรียบร้อย!</h2>
+    <p>คะแนนของคุณคือ</p>
+    <h1 id="score-text" style="color: #06C755; font-size: 48px; margin: 10px 0;">0 / 2</h1>
+    <p>ระบบได้บันทึกคะแนนเข้าฐานข้อมูลเรียบร้อยแล้ว</p>
+    <button class="btn-submit" onclick="liff.closeWindow()" style="background: #333; margin-top: 15px;">ปิดหน้าต่าง</button>
+  </div>
+</div>
+
+<script>
+  // 🔴 1. ใส่ LIFF ID ของคุณจาก LINE Developers
+  const MY_LIFF_ID = "2011669854-XyKoko2d"; 
+  
+  // 🔴 2. ใส่ Web App URL ที่ได้จาก Google Apps Script (GAS)
+  const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyJl--z5eaaSIDFBqqQ2KVlg_MA8_iuEPeigttPDo2-Ano_Afl9fI39bVelMRd7FNw/exec"; 
+
+  // 🔴 3. ตั้งค่าเฉลยข้อสอบ (ก=A, ข=B, ค=C)
+  const answers = { 
+    q1: "B", 
+    q2: "A" 
+  };
+
+  let userData = { userId: "", displayName: "" };
+
+  // เมื่อเปิดหน้าเว็บ ระบบจะดึงโปรไฟล์ LINE อัตโนมัติ
+  window.onload = function() {
+    liff.init({ liffId: MY_LIFF_ID })
+      .then(() => {
+        if (!liff.isLoggedIn()) {
+          liff.login();
+        } else {
+          liff.getProfile().then(profile => {
+            userData.userId = profile.userId;
+            userData.displayName = profile.displayName;
+
+            document.getElementById("user-name").innerText = profile.displayName;
+            document.getElementById("user-img").src = profile.pictureUrl || "https://via.placeholder.com/45";
+            
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("quiz-screen").style.display = "block";
+          });
+        }
+      })
+      .catch((err) => {
+        console.error("LIFF Init error", err);
+        alert("เกิดข้อผิดพลาดในการเชื่อมต่อกับ LINE");
+      });
+  };
+
+  // ฟังก์ชันคำนวณคะแนนและส่งข้อมูล
+  function submitQuiz() {
+    const form = document.getElementById("quiz-form");
+    const q1 = form.q1.value;
+    const q2 = form.q2.value;
+
+    if (!q1 || !q2) {
+      alert("กรุณาตอบคำถามให้ครบทุกข้อครับ");
+      return;
+    }
+
+    // คำนวณคะแนน
+    let score = 0;
+    if (q1 === answers.q1) score++;
+    if (q2 === answers.q2) score++;
+
+    const btn = document.getElementById("submit-btn");
+    btn.disabled = true;
+    btn.innerText = "กำลังส่งคะแนน...";
+
+    const payload = {
+      userId: userData.userId,
+      displayName: userData.displayName,
+      score: score,
+      total: 2
+    };
+
+    // ส่งคะแนนไปเก็บที่ Google Sheets ผ่าน Google Apps Script
+    fetch(GAS_WEB_APP_URL, {
+      method: "POST",
+      body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("quiz-screen").style.display = "none";
+      document.getElementById("result-screen").style.display = "block";
+      document.getElementById("score-text").innerText = `${score} / 2`;
+    })
+    .catch(err => {
+      console.error(err);
+      alert("เกิดข้อผิดพลาดในการบันทึกคะแนน กรุณาลองใหม่อีกครั้ง");
+      btn.disabled = false;
+      btn.innerText = "ส่งคำตอบ";
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -130,13 +130,13 @@
 </div>
 
 <script>
-  // 🔴 1. ใส่ LIFF ID ของคุณ
+  // 🔴 1. LIFF ID ของคุณ
   const MY_LIFF_ID = "2011669854-XyKoko2d";
   
-  // 🔴 2. ใส่ Web App URL จาก Google Apps Script (GAS)
-  const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyJl--z5eaaSIDFBqqQ2KVlg_MA8_iuEPeigttPDo2-Ano_Afl9fI39bVelMRd7FNw/exec"; 
+  // 🔴 2. วาง Web App URL ตัวใหม่ที่คุณได้จาก Google Apps Script (GAS) ตรงนี้
+  const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyJl--z5eaaSIDFBqqQ2KVlg_MA8_iuEPeigttPDo2-Ano_Afl9fI39bVelMRd7FNw/exec";
 
-3. ตั้งค่าเฉลยข้อสอบ 5 ข้อ (A, B, C, D)
+  // 🔴 3. เฉลยข้อสอบ 5 ข้อ (A, B, C, D)
   const answers = { 
     q1: "B", 
     q2: "A",
@@ -162,12 +162,14 @@
             
             document.getElementById("loading").style.display = "none";
             document.getElementById("quiz-screen").style.display = "block";
+          }).catch(err => {
+            alert("ดึงข้อมูล Profile ไม่สำเร็จ: " + err.message);
           });
         }
       })
       .catch((err) => {
         console.error("LIFF Init error", err);
-        alert("เกิดข้อผิดพลาดในการเชื่อมต่อกับ LINE");
+        alert("LIFF Init ล้มเหลว! สาเหตุ: " + err.message);
       });
   };
 
@@ -214,10 +216,10 @@
       userId: userData.userId,
       displayName: userData.displayName,
       fullName: fullName,
-      department: department, // 🟢 ส่งข้อมูลแผนก
+      department: department,
       testType: testType,
       score: score,
-      total: 5                // 🟢 คะแนนเต็ม 5
+      total: 5
     };
     
     fetch(GAS_WEB_APP_URL, {
@@ -226,13 +228,19 @@
     })
     .then(res => res.json())
     .then(data => {
-      document.getElementById("quiz-screen").style.display = "none";
-      document.getElementById("result-screen").style.display = "block";
-      document.getElementById("score-text").innerText = `${score} / 5`;
+      if (data.status === "success") {
+        document.getElementById("quiz-screen").style.display = "none";
+        document.getElementById("result-screen").style.display = "block";
+        document.getElementById("score-text").innerText = `${score} / 5`;
+      } else {
+        alert("เกิดข้อผิดพลาดจากฝั่งเซิร์ฟเวอร์: " + (data.message || "ไม่สามารถบันทึกข้อมูลได้"));
+        btn.disabled = false;
+        btn.innerText = "ส่งคำตอบ";
+      }
     })
     .catch(err => {
       console.error(err);
-      alert("เกิดข้อผิดพลาดในการบันทึกคะแนน กรุณาลองใหม่อีกครั้ง");
+      alert("เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง");
       btn.disabled = false;
       btn.innerText = "ส่งคำตอบ";
     });

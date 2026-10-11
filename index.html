@@ -115,6 +115,14 @@
         <label class="option"><input type="radio" name="q5" value="D"> เพื่อเช็กชื่อการเข้าเรียนเท่านั้น</label>
       </div>
 
+       <!-- 🟢 ข้อที่ 6 -->
+      <div class="question-block">
+        <h3>ข้อที่ 6:  คืออะไร?</h3>
+        <label class="option"><input type="radio" name="q6" value="A"> A </label>
+        <label class="option"><input type="radio" name="q6" value="B"> B </label>
+        <label class="option"><input type="radio" name="q6" value="C"> C </label>
+        <label class="option"><input type="radio" name="q6" value="D"> D </label>
+      </div>
       <button type="button" class="btn-submit" id="submit-btn" onclick="submitQuiz()">ส่งคำตอบ</button>
     </form>
   </div>
@@ -136,13 +144,14 @@
   // 🔴 2. วาง Web App URL ตัวใหม่ที่คุณได้จาก Google Apps Script (GAS) ตรงนี้
   const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyJl--z5eaaSIDFBqqQ2KVlg_MA8_iuEPeigttPDo2-Ano_Afl9fI39bVelMRd7FNw/exec";
 
-  // 🔴 3. เฉลยข้อสอบ 5 ข้อ (A, B, C, D)
+  // 🔴 3. เฉลยข้อสอบ 6 ข้อ (A, B, C, D)
   const answers = { 
     q1: "B", 
     q2: "A",
     q3: "B",
     q4: "C",
-    q5: "B"
+    q5: "B",
+    q6: "B"
   };
 
   let userData = { userId: "", displayName: "" };
@@ -184,6 +193,7 @@
     const q3 = form.q3.value;
     const q4 = form.q4.value;
     const q5 = form.q5.value;
+    const q6 = form.q6.value;
 
     if (!fullName) {
       alert("กรุณากรอกชื่อ - นามสกุลจริงก่อนส่งคำตอบครับ");
@@ -195,8 +205,8 @@
       return;
     }
 
-    if (!q1 || !q2 || !q3 || !q4 || !q5) {
-      alert("กรุณาตอบคำถามให้ครบทั้ง 5 ข้อครับ");
+    if (!q1 || !q2 || !q3 || !q4 || !q5|| !q6) {
+      alert("กรุณาตอบคำถามให้ครบทั้ง 6 ข้อครับ");
       return;
     }
 
@@ -207,6 +217,7 @@
     if (q3 === answers.q3) score++;
     if (q4 === answers.q4) score++;
     if (q5 === answers.q5) score++;
+    if (q6 === answers.q5) score++;
 
     const btn = document.getElementById("submit-btn");
     btn.disabled = true;
@@ -219,7 +230,7 @@
       department: department,
       testType: testType,
       score: score,
-      total: 5
+      total: 6
     };
     
     fetch(GAS_WEB_APP_URL, {
@@ -231,7 +242,7 @@
       if (data.status === "success") {
         document.getElementById("quiz-screen").style.display = "none";
         document.getElementById("result-screen").style.display = "block";
-        document.getElementById("score-text").innerText = `${score} / 5`;
+        document.getElementById("score-text").innerText = `${score} / 6`;
       } else {
         alert("เกิดข้อผิดพลาดจากฝั่งเซิร์ฟเวอร์: " + (data.message || "ไม่สามารถบันทึกข้อมูลได้"));
         btn.disabled = false;
